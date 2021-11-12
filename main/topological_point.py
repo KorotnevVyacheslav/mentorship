@@ -967,25 +967,41 @@ mu0 = 104.94062588 - 33.11552099j
 mu1 = 1
 epsilon1 = 1
 
-N = 500
+N = 100
 a0 = 5.1
 b0 = 280
-a_ar = np.linspace(6, 6, 1)
+a_ar = np.linspace(0.9, 1.1, 10)
 
 
-for eps1 in a_ar:
+#for eps1 in a_ar:
+eps1 = 6
+for koef in a_ar:
     for iter in range(2):
-        epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,eps1 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[0][iter]
-        mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,eps1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[1][iter]
-
-        #if mu0.imag < 0 or epsilon0.imag < 0:
-            #print("passed ", iter)
-            #continue
+        epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,6 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[0][iter]
+        mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,6 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[1][iter]
+        #mu0 = 1
+        #epsilon0 = 21.2777 + 26.9458j
+        kk = complex(koef)
+        epsilon0 = epsilon0 * kk
+        if mu0.imag < 0 or epsilon0.imag < 0 or iter == 1:
+            print("passed ", iter)
+            continue
         print(eps1, epsilon0, mu0, iter)
+
+
         # epsilon0 = 1
         # mu0 = 1
         angle = np.linspace(0.01, np.pi / 2 - 0.01, N)
         wave = np.linspace(0.2, 0.8, N)
+        '''
+        with open("tables/angle.csv", "wt") as fp:
+            writer = csv.writer(fp, delimiter=" ")
+            writer.writerow(angle)
+
+        with open("tables/wave.csv", "wt") as fp:
+            writer = csv.writer(fp, delimiter=" ")
+            writer.writerow(wave)
+        '''
         # delt = np.tensordot(wave ,  angle, axes =0)
         XX, YY = np.meshgrid(angle, wave)
         delt = XX + YY
@@ -999,16 +1015,13 @@ for eps1 in a_ar:
         ZZ = delt
         fig, ax = plt.subplots(1, 2)
 
+
+
         pcm = ax[0].pcolor(YY, XX, ZZ, cmap="jet")
         fig.colorbar(pcm, ax=ax[0], extend="max")
         plt.ylabel("$Angle$ $of$ $incidence$")
         plt.xlabel("$\lambda$ $,$ $nm$")
 
-        """
-        for i in range(N):
-            for j in range(N):
-                    delt[i][j] = rho(angle[j] , a0 , b0 ,epsilon1 , mu1, epsilon0 , mu0 , wave[i])[0]
-        """
         ZZ = delt2
         pcm = ax[1].pcolor(YY, XX, ZZ, cmap="jet")
         fig.colorbar(pcm, ax=ax[1], extend="max")
