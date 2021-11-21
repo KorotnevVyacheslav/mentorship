@@ -587,9 +587,10 @@ def epsilon_si(wave_lenght):
     Finding complex epsilon for known wave lenght using to files with data for Si
     Using linear approximation
     """
+    wave_lenght *= 1000
     si_n = []
     with open("si_n.csv", newline="\n") as csvfile:
-        ar = csv.reader(csvfile, delimiter=",")
+        ar = csv.reader(csvfile, delimiter="	")
         for row in ar:
             si_n.append(row)
     for i in si_n:
@@ -598,7 +599,7 @@ def epsilon_si(wave_lenght):
 
     si_k = []
     with open("si_k.csv", newline="\n") as csvfile:
-        ar = csv.reader(csvfile, delimiter=",")
+        ar = csv.reader(csvfile, delimiter="	")
         for row in ar:
             si_k.append(row)
     for i in si_k:
@@ -628,9 +629,10 @@ def epsilon_sio2(wave_lenght):
     Finding complex epsilon for known wave lenght using to files with data for SiO2
     Using linear approximation
     """
+    wave_lenght *= 1000
     si02_n = []
     with open("sio2_n.csv", newline="\n") as csvfile:
-        ar = csv.reader(csvfile, delimiter=",")
+        ar = csv.reader(csvfile, delimiter="	")
         for row in ar:
             si02_n.append(row)
     for i in si02_n:
@@ -967,68 +969,83 @@ mu0 = 104.94062588 - 33.11552099j
 mu1 = 1
 epsilon1 = 1
 
-N = 100
-a0 = 5.1
+N = 50
+a0 = 5.1 * 0.9
 b0 = 280
-a_ar = np.linspace(0.9, 1.1, 10)
+a_ar = np.linspace(0.5, 1.5, 10)
+b_ar = np.linspace(1, 1, 1)
 
 
 #for eps1 in a_ar:
-eps1 = 6
-for koef in a_ar:
-    for iter in range(2):
-        epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,6 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[0][iter]
-        mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,6 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[1][iter]
-        #mu0 = 1
-        #epsilon0 = 21.2777 + 26.9458j
-        kk = complex(koef)
-        epsilon0 = epsilon0 * kk
-        if mu0.imag < 0 or epsilon0.imag < 0 or iter == 1:
-            print("passed ", iter)
-            continue
-        print(eps1, epsilon0, mu0, iter)
+#eps1 = 6
+num = 0
+eps1  = 6
+for koef1 in a_ar:
+    for koef2 in b_ar:
+        for iter in range(1):
+            a0 = 5.1 * koef1
+            #epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,eps1 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1)[0][iter]
+            #mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0, eps1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1)[1][iter]
+            mu0 = 1
+            epsilon0 = 21.2777 + 26.9458j
+
+            #kk = complex(koef)
+            epsilon0 = epsilon0 * koef1
+            mu0 = mu0 * (koef2)
+
+            #if mu0.imag < 0 or epsilon0.imag < 0 or iter == 0:
+            '''
+            if iter == 1:
+                print("passed ", iter)
+                continue
+            else:
+                num +=1
+            print(eps1, epsilon0, mu0, iter)
+            '''
+
+            # epsilon0 = 1
+            # mu0 = 1
+            angle = np.linspace(0.01, np.pi / 2 - 0.01, N)
+            wave = np.linspace(0.2, 0.8, N)
+            '''
+            with open("tables/angle.csv", "wt") as fp:
+                writer = csv.writer(fp, delimiter=" ")
+                writer.writerow(angle)
+
+            with open("tables/wave.csv", "wt") as fp:
+                writer = csv.writer(fp, delimiter=" ")
+                writer.writerow(wave)
+            '''
+            # delt = np.tensordot(wave ,  angle, axes =0)
+            XX, YY = np.meshgrid(angle, wave)
+            delt = XX + YY
+            delt2 = XX + YY
+            for i in range(N):
+                for j in range(N):
+                    k = rho(angle[j], a0, b0,eps1 , mu1, epsilon0, mu0, wave[i])
+                    delt[i][j] = k[1]
+                    delt2[i][j] = k[0]
+            #print(type(delt))
+            ZZ = delt
+            fig, ax = plt.subplots(1, 2)
 
 
-        # epsilon0 = 1
-        # mu0 = 1
-        angle = np.linspace(0.01, np.pi / 2 - 0.01, N)
-        wave = np.linspace(0.2, 0.8, N)
-        '''
-        with open("tables/angle.csv", "wt") as fp:
-            writer = csv.writer(fp, delimiter=" ")
-            writer.writerow(angle)
 
-        with open("tables/wave.csv", "wt") as fp:
-            writer = csv.writer(fp, delimiter=" ")
-            writer.writerow(wave)
-        '''
-        # delt = np.tensordot(wave ,  angle, axes =0)
-        XX, YY = np.meshgrid(angle, wave)
-        delt = XX + YY
-        delt2 = XX + YY
-        for i in range(N):
-            for j in range(N):
-                k = rho(angle[j], a0, b0,eps1 , mu1, epsilon0, mu0, wave[i])
-                delt[i][j] = k[1]
-                delt2[i][j] = k[0]
-        #print(type(delt))
-        ZZ = delt
-        fig, ax = plt.subplots(1, 2)
+            pcm = ax[0].pcolor(YY, XX, ZZ, cmap="jet")
+            fig.colorbar(pcm, ax=ax[0], extend="max")
+            plt.ylabel("$Angle$ $of$ $incidence$")
+            plt.xlabel("$\lambda$ $,$ $nm$")
 
 
-
-        pcm = ax[0].pcolor(YY, XX, ZZ, cmap="jet")
-        fig.colorbar(pcm, ax=ax[0], extend="max")
-        plt.ylabel("$Angle$ $of$ $incidence$")
-        plt.xlabel("$\lambda$ $,$ $nm$")
-
-        ZZ = delt2
-        pcm = ax[1].pcolor(YY, XX, ZZ, cmap="jet")
-        fig.colorbar(pcm, ax=ax[1], extend="max")
-        plt.ylabel("$Angle$ $of$ $incidence$")
-        plt.xlabel("$\lambda$ $,$ $nm$")
-
+            ZZ = delt2
+            pcm = ax[1].pcolor(YY, XX, ZZ, cmap="jet")
+            fig.colorbar(pcm, ax=ax[1], extend="max")
+            plt.ylabel("$Angle$ $of$ $incidence$")
+            plt.xlabel("$\lambda$ $,$ $nm$")
+            #plt.savefig(str(num))
 plt.show()
+
+
 '''
 
 for iter in range(2):
@@ -1075,11 +1092,13 @@ for iter in range(2):
     plt.show()
 
 
-'''
+
 for iter in range(2):
     epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,epsilon1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1)[0][iter]
     mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,epsilon1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1)[1][iter]
     print([epsilon0, mu0])
-
+'''
+print(epsilon_sio2(0.55))
+print(epsilon_si(0.55))
 # graph_angle(0.55)
 # graph_wave_lenght()
