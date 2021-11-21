@@ -11,8 +11,14 @@ def exp_phase(k0, a, phi,epsilon1 , mu1, epsilon, mu):
     phi - angle of incidence
     epsilon - dielectric coefficient
     mu - magnetic coefficient"""
-    kz = k0 * np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * np.sin(phi) ** 2)
-    return np.exp(-1j * a * kz)
+    kz = k0 * np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * (np.sin(phi) ** 2))
+    #print(np.exp(-1j * a * kz) )
+    '''
+    print(kz * a)
+    print(np.exp(-1j * a * kz) )
+    print(abs(-1j * a * kz))
+    '''
+    return np.exp( - 1j * a * kz)
 
 
 def m_epsilon_plus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -25,13 +31,13 @@ def m_epsilon_plus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
     epsilon_3 - dielectric coefficient of Si
     mu_3 - magnetic coefficient of Si
     """
-    k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
-    k3z = np.sqrt(0j + epsilon_3 * mu_3 - epsilon1 * mu1 * np.sin(phi) ** 2)
+    k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * (np.sin(phi) ** 2))
+    k3z = np.sqrt(0j + epsilon_3 * mu_3 - epsilon1 * mu1 * (np.sin(phi) ** 2))
     if (k3z * epsilon_2 - k2z * epsilon_3) == 0:
         temp = 0
     else:
         temp = (k3z * epsilon_2 + k2z * epsilon_3) / (k3z * epsilon_2 - k2z * epsilon_3)
-    return 1 + temp / (e2 ** 2)
+    return temp + (e2 ** 2)
 
 
 def m_epsilon_minus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -50,7 +56,7 @@ def m_epsilon_minus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         temp = 0
     else:
         temp = (k3z * epsilon_2 + k2z * epsilon_3) / (k3z * epsilon_2 - k2z * epsilon_3)
-    return 1 - temp / (e2 ** 2)
+    return -temp + (e2 ** 2)
 
 
 def m_mu_plus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -69,7 +75,7 @@ def m_mu_plus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         temp = 0
     else:
         temp = (k3z * mu_2 + k2z * mu_3) / (k3z * mu_2 - k2z * mu_3)
-    return 1 + temp / (e2 ** 2)
+    return temp + (e2 ** 2)
 
 
 def m_mu_minus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -88,7 +94,7 @@ def m_mu_minus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         temp = 0
     else:
         temp = (k3z * mu_2 + k2z * mu_3) / (k3z * mu_2 - k2z * mu_3)
-    return 1 - temp / (e2 ** 2)
+    return - temp + (e2 ** 2)
 
 
 def r_TM(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -130,7 +136,7 @@ def r_TM(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
             temp = (k2z * epsilon * m_plus + kz * epsilon_2 * m_minus) / (
                 k2z * epsilon * m_plus - kz * epsilon_2 * m_minus
             )
-        return 1 + temp / (e1 ** 2)
+        return temp + (e1 ** 2)
 
     def n_epsilon_minus(phi, e1, e2, epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         """
@@ -155,7 +161,7 @@ def r_TM(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
             temp = (k2z * epsilon * m_plus + kz * epsilon_2 * m_minus) / (
                 k2z * epsilon * m_plus - kz * epsilon_2 * m_minus
             )
-        return 1 - temp / (e1 ** 2)
+        return - temp + (e1 ** 2)
 
     n_plus = n_epsilon_plus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
     n_minus = n_epsilon_minus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
@@ -204,7 +210,7 @@ def r_TE(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
             temp = (k2z * mu * m_plus + kz * mu_2 * m_minus) / (
                 k2z * mu * m_plus - kz * mu_2 * m_minus
             )
-        return 1 + temp / (e1 ** 2)
+        return temp + (e1 ** 2)
 
     def n_mu_minus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         """
@@ -229,7 +235,7 @@ def r_TE(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
             temp = (k2z * mu * m_plus + kz * mu_2 * m_minus) / (
                 k2z * mu * m_plus - kz * mu_2 * m_minus
             )
-        return 1 - temp / (e1 ** 2)
+        return - temp + (e1 ** 2)
 
     n_plus = n_mu_plus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
     n_minus = n_mu_minus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
@@ -453,7 +459,7 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         epsilon_2 - dielectric coefficient of SiO2
         mu_2 - magnetic coefficient of Si
         epsilon_3 - dielectric coefficient of Si
-        mu_3 - magnetic coefficient of Si
+        mu_3 - magnetic coefficient of Si    print(e2)
         """
         m_plus = m_epsilon_plus(phi, e2, epsilon1, mu1,  epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
@@ -530,6 +536,7 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         B = (c1 - b1 * c2) / (a1 - a2 * b1)
         C = a2 * a2 / 4 - b2
         return [A * A - C, 2 * A * B + c2, B * B]
+
 
     e2 = exp_phase(k0, b, phi, epsilon1, mu1, epsilon_2, mu_2)
     a1 = a_epsilon(phi, a, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3)
@@ -757,8 +764,10 @@ def graph_wave_lenght():
 def rho(phi, a, b,epsilon1 , mu1, epsilon, mu, wave_lenght):
     """ """
     k0 = 2 * np.pi / wave_lenght / 1000
+
     epsilon_2 = epsilon_sio2(wave_lenght)
     epsilon_3 = epsilon_si(wave_lenght)
+    print(epsilon_2)
     mu_3 = 1
     mu_2 = 1
     e2 = exp_phase(k0, b, phi, epsilon1, mu1, epsilon_2, mu_2)
@@ -768,6 +777,7 @@ def rho(phi, a, b,epsilon1 , mu1, epsilon, mu, wave_lenght):
     r = r_s / r_p
     psi = np.arctan(np.abs(r))
     delta = np.angle(r)
+    print(abs(e2))
     return [psi, delta]
     # return [abs(r_s) , abs(r_p)]
 
@@ -970,9 +980,11 @@ mu1 = 1
 epsilon1 = 1
 
 N = 50
-a0 = 5.1 * 0.9
-b0 = 280
-a_ar = np.linspace(0.5, 1.5, 10)
+a0 = 5.1 * 1
+#a0 = 0
+b0 = -280 * 1
+#b0 = 0.28
+a_ar = np.linspace(1, 1, 1)
 b_ar = np.linspace(1, 1, 1)
 
 
@@ -980,33 +992,36 @@ b_ar = np.linspace(1, 1, 1)
 #eps1 = 6
 num = 0
 eps1  = 6
+#epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,eps1 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1)[0]
+
 for koef1 in a_ar:
     for koef2 in b_ar:
-        for iter in range(1):
-            a0 = 5.1 * koef1
+        for iter in range(2):
             #epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,eps1 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1)[0][iter]
             #mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0, eps1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1)[1][iter]
             mu0 = 1
             epsilon0 = 21.2777 + 26.9458j
+            #epsilon0 = -8.4953 - 1.6239j
+            #print(np.sqrt(epsilon0))
 
             #kk = complex(koef)
             epsilon0 = epsilon0 * koef1
             mu0 = mu0 * (koef2)
 
-            #if mu0.imag < 0 or epsilon0.imag < 0 or iter == 0:
+            #print(eps1, epsilon0, mu0, iter)
             '''
-            if iter == 1:
+            if mu0.imag < 0 or epsilon0.imag < 0 or iter == 0:
                 print("passed ", iter)
                 continue
             else:
                 num +=1
-            print(eps1, epsilon0, mu0, iter)
             '''
+
 
             # epsilon0 = 1
             # mu0 = 1
             angle = np.linspace(0.01, np.pi / 2 - 0.01, N)
-            wave = np.linspace(0.2, 0.8, N)
+            wave = np.linspace(0.2, 0.99, N)
             '''
             with open("tables/angle.csv", "wt") as fp:
                 writer = csv.writer(fp, delimiter=" ")
@@ -1045,60 +1060,5 @@ for koef1 in a_ar:
             #plt.savefig(str(num))
 plt.show()
 
-
-'''
-
-for iter in range(2):
-    epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,epsilon1 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[0][iter]
-    mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,epsilon1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1,)[1][iter]
-
-    if mu0.imag < 0 or epsilon0.imag < 0:
-        print("passed ", iter)
-        continue
-
-    # epsilon0 = 1
-    # mu0 = 1
-    angle = np.linspace(0.01, np.pi / 2 - 0.01, N)
-    wave = np.linspace(0.2, 0.8, N)
-    # delt = np.tensordot(wave ,  angle, axes =0)
-    XX, YY = np.meshgrid(angle, wave)
-    delt = XX + YY
-    delt2 = XX + YY
-    for i in range(N):
-        for j in range(N):
-            k = rho(angle[j], a0, b0,epsilon1 , mu1, epsilon0, mu0, wave[i])
-            delt[i][j] = k[1]
-            delt2[i][j] = k[0]
-    print(type(delt))
-    ZZ = delt
-    fig, ax = plt.subplots(1, 2)
-
-    pcm = ax[0].pcolor(YY, XX, ZZ, cmap="jet")
-    fig.colorbar(pcm, ax=ax[0], extend="max")
-    plt.ylabel("$Angle$ $of$ $incidence$")
-    plt.xlabel("$\lambda$ $,$ $nm$")
-
-    """
-    for i in range(N):
-        for j in range(N):
-                delt[i][j] = rho(angle[j] , a0 , b0 , epsilon0 , mu0 , wave[i])[0]
-    """
-    ZZ = delt2
-    pcm = ax[1].pcolor(YY, XX, ZZ, cmap="jet")
-    fig.colorbar(pcm, ax=ax[1], extend="max")
-    plt.ylabel("$Angle$ $of$ $incidence$")
-    plt.xlabel("$\lambda$ $,$ $nm$")
-
-    plt.show()
-
-
-
-for iter in range(2):
-    epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,epsilon1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1)[0][iter]
-    mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,epsilon1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1)[1][iter]
-    print([epsilon0, mu0])
-'''
-print(epsilon_sio2(0.55))
-print(epsilon_si(0.55))
 # graph_angle(0.55)
 # graph_wave_lenght()
