@@ -12,6 +12,8 @@ def exp_phase(k0, a, phi,epsilon1 , mu1, epsilon, mu):
     epsilon - dielectric coefficient
     mu - magnetic coefficient"""
     kz = k0 * np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * (np.sin(phi) ** 2))
+    if kz.imag > 0:
+        kz *= -1
     #print(np.exp(-1j * a * kz) )
     '''
     print(kz * a)
@@ -32,7 +34,11 @@ def m_epsilon_plus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
     mu_3 - magnetic coefficient of Si
     """
     k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * (np.sin(phi) ** 2))
+    if k2z.imag > 0:
+        k2z *= -1
     k3z = np.sqrt(0j + epsilon_3 * mu_3 - epsilon1 * mu1 * (np.sin(phi) ** 2))
+    if k3z.imag > 0:
+        k3z *= -1
     if (k3z * epsilon_2 - k2z * epsilon_3) == 0:
         temp = 0
     else:
@@ -51,7 +57,11 @@ def m_epsilon_minus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
     mu_3 - magnetic coefficient of Si
     """
     k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if k2z.imag > 0:
+        k2z *= -1
     k3z = np.sqrt(0j + epsilon_3 * mu_3 - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if k3z.imag > 0:
+        k3z *= -1
     if (k3z * epsilon_2 - k2z * epsilon_3) == 0:
         temp = 0
     else:
@@ -70,7 +80,11 @@ def m_mu_plus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
     mu_3 - magnetic coefficient of Si
     """
     k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if k2z.imag > 0:
+        k2z *= -1
     k3z = np.sqrt(0j + epsilon_3 * mu_3 - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if k3z.imag > 0:
+        k3z *= -1
     if (k3z * mu_2 - k2z * mu_3) == 0:
         temp = 0
     else:
@@ -89,7 +103,11 @@ def m_mu_minus(phi, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
     mu_3 - magnetic coefficient of Si
     """
     k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if k2z.imag > 0:
+        k2z *= -1
     k3z = np.sqrt(0j + epsilon_3 * mu_3 - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if k3z.imag > 0:
+        k3z *= -1
     if (k3z * mu_2 - k2z * mu_3) == 0:
         temp = 0
     else:
@@ -129,7 +147,11 @@ def r_TM(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
         m_plus = m_epsilon_plus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         kz = np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if kz.imag > 0:
+            kz *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         if (k2z * epsilon * m_plus - kz * epsilon_2 * m_minus) == 0:
             temp = 0
         else:
@@ -154,7 +176,11 @@ def r_TM(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
         m_plus = m_epsilon_plus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         kz = np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if kz.imag > 0:
+            kz *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         if (k2z * epsilon * m_plus - kz * epsilon_2 * m_minus) == 0:
             temp = 0
         else:
@@ -166,7 +192,11 @@ def r_TM(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
     n_plus = n_epsilon_plus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
     n_minus = n_epsilon_minus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
     k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+    if k1z.imag > 0:
+        k1z *= -1
     kz = np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if kz.imag > 0:
+        kz *= -1
     r = (kz * n_plus - k1z * epsilon * n_minus) / (kz * n_plus + k1z * epsilon * n_minus)
     return r
 
@@ -203,7 +233,11 @@ def r_TE(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
         m_plus = m_mu_plus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         kz = np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if kz.imag > 0:
+            kz *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         if (k2z * mu * m_plus - kz * mu_2 * m_minus) == 0:
             temp = 0
         else:
@@ -228,7 +262,11 @@ def r_TE(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
         m_plus = m_mu_plus(phi, e2, epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         kz = np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if kz.imag > 0:
+            kz *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         if (k2z * mu * m_plus - kz * mu_2 * m_minus) == 0:
             temp = 0
         else:
@@ -240,7 +278,11 @@ def r_TE(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu
     n_plus = n_mu_plus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
     n_minus = n_mu_minus(phi, e1, e2, epsilon1, mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
     k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+    if k1z.imag > 0:
+        k1z *= -1
     kz = np.sqrt(0j + epsilon * mu - epsilon1 * mu1 * np.sin(phi) ** 2)
+    if kz.imag > 0:
+        kz *= -1
     r = (kz * n_plus * mu1 - k1z * mu * n_minus) / (kz * n_plus * mu1 + k1z * mu * n_minus)
     return r
 
@@ -275,7 +317,11 @@ def solutions_epsilon(phi, k0, a, b, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_epsilon_plus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + 1 - np.sin(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         r = (1 / k1z) + (epsilon_2 / k2z) * (m_minus / m_plus)
         return -r
 
@@ -295,7 +341,11 @@ def solutions_epsilon(phi, k0, a, b, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_epsilon_plus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + 1 - np.sin(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return (1 / k1z) * (epsilon_2 / k2z) * (m_minus / m_plus)
 
     def c_epsilon(phi, k0, a, e2, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -313,8 +363,12 @@ def solutions_epsilon(phi, k0, a, b, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         """
         m_plus = m_epsilon_plus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
-        k1z = np.cos(phi)
+        k1z = np.sqrt(0j + 1 - np.sin(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return ((1 / k1z) + (epsilon_2 / k2z) * (m_minus / m_plus)) / (1j * a * k0)
 
     def a_mu(phi, a, e2, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -333,7 +387,11 @@ def solutions_epsilon(phi, k0, a, b, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_mu_plus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + 1 - np.sin(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         r = (1 / k1z) + (mu_2 / k2z) * (m_minus / m_plus)
         return -r
 
@@ -353,7 +411,11 @@ def solutions_epsilon(phi, k0, a, b, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_mu_plus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + 1 - np.sin(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return (1 / k1z) * (mu_2 / k2z) * (m_minus / m_plus)
 
     def c_mu(phi, k0, a, e2, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -371,8 +433,12 @@ def solutions_epsilon(phi, k0, a, b, mu, epsilon_2, mu_2, epsilon_3, mu_3):
         """
         m_plus = m_mu_plus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon_2, mu_2, epsilon_3, mu_3)
-        k1z = np.cos(phi)
+        k1z = np.sqrt(0j + 1 - np.sin(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return ((1 / k1z) + (mu_2 / k2z) * (m_minus / m_plus)) / (1j * a * k0)
 
     e2 = exp_phase(k0, b, phi, epsilon_2, mu_2)
@@ -425,7 +491,11 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_epsilon_plus(phi, e2, epsilon1, mu1,  epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         r = (epsilon1 / k1z) + (epsilon_2 / k2z) * (m_minus / m_plus)
         return -r
 
@@ -445,7 +515,11 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_epsilon_plus(phi, e2, epsilon1, mu1,  epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return (epsilon1 / k1z) * (epsilon_2 / k2z) * (m_minus / m_plus)
 
     def c_epsilon(phi, a, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -464,7 +538,11 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_epsilon_plus(phi, e2, epsilon1, mu1,  epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_epsilon_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return ((epsilon1 / k1z) + (epsilon_2 / k2z) * (m_minus / m_plus)) / (1j * a * k0)
 
     def a_mu(phi, a, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -483,7 +561,11 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_mu_plus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         r = (mu1 / k1z) + (mu_2 / k2z) * (m_minus / m_plus)
         return -r
 
@@ -503,7 +585,11 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_mu_plus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return (mu1 / k1z) * (mu_2 / k2z) * (m_minus / m_plus)
 
     def c_mu(phi, a, e2,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
@@ -522,7 +608,11 @@ def solutions(phi, k0, a, b,epsilon1 , mu1, epsilon_2, mu_2, epsilon_3, mu_3):
         m_plus = m_mu_plus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         m_minus = m_mu_minus(phi, e2, epsilon1, mu1, epsilon_2, mu_2, epsilon_3, mu_3)
         k1z = np.sqrt(0j + epsilon1 * mu1 * np.cos(phi) ** 2)
+        if k1z.imag > 0:
+            k1z *= -1
         k2z = np.sqrt(0j + epsilon_2 * mu_2 - epsilon1 * mu1 * np.sin(phi) ** 2)
+        if k2z.imag > 0:
+            k2z *= -1
         return ((mu1 / k1z) + (mu_2 / k2z) * (m_minus / m_plus)) / (1j * a * k0)
 
     def equation_coefficients(a1, b1, c1, a2, b2, c2):
@@ -767,9 +857,10 @@ def rho(phi, a, b,epsilon1 , mu1, epsilon, mu, wave_lenght):
 
     epsilon_2 = epsilon_sio2(wave_lenght)
     epsilon_3 = epsilon_si(wave_lenght)
-    print(epsilon_2)
+    #epsilon_3 = 1
     mu_3 = 1
     mu_2 = 1
+
     e2 = exp_phase(k0, b, phi, epsilon1, mu1, epsilon_2, mu_2)
     e1 = exp_phase(k0, a, phi, epsilon1, mu1, epsilon, mu)
     r_s = r_TM(phi, e1, e2,epsilon1 , mu1, epsilon, mu, epsilon_2, mu_2, epsilon_3, mu_3)
@@ -777,7 +868,7 @@ def rho(phi, a, b,epsilon1 , mu1, epsilon, mu, wave_lenght):
     r = r_s / r_p
     psi = np.arctan(np.abs(r))
     delta = np.angle(r)
-    print(abs(e2))
+    print(abs(r_s))
     return [psi, delta]
     # return [abs(r_s) , abs(r_p)]
 
@@ -982,7 +1073,7 @@ epsilon1 = 1
 N = 50
 a0 = 5.1 * 1
 #a0 = 0
-b0 = -280 * 1
+b0 = 280 * 1
 #b0 = 0.28
 a_ar = np.linspace(1, 1, 1)
 b_ar = np.linspace(1, 1, 1)
@@ -996,7 +1087,7 @@ eps1  = 6
 
 for koef1 in a_ar:
     for koef2 in b_ar:
-        for iter in range(2):
+        for iter in range(1):
             #epsilon0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0,eps1 , mu1 , epsilon_sio2(0.55),1,epsilon_si(0.55),1)[0][iter]
             #mu0 = solutions(np.pi / 4,2 * np.pi / 0.55 / 1000,a0,b0, eps1 , mu1,epsilon_sio2(0.55),1,epsilon_si(0.55),1)[1][iter]
             mu0 = 1
